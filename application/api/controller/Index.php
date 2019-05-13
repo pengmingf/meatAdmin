@@ -2,20 +2,20 @@
 
 namespace app\api\controller;
 
-use app\common\controller\Base;
+use think\Controller;
 use think\facade\Request;
 use app\common\model\Suser;
 use app\common\model\Buser;
 use think\cache\driver\Redis;
 use app\common\model\Foodlist;
 use app\common\model\Foodtype;
+use app\common\model\Dingdan;
 
-class Index extends Base
+class Index extends Controller
 {
-    //微信小程序登录
     public function login()
     {
-        $data = Request::get();
+        $data = Request::post();
         $rule = ['xuehao|账号'=>'require|integer|length:8',
                  'password|密码' => 'require|alphaDash|length:6,16'];
         $result = $this->validate($data,$rule);
@@ -24,20 +24,19 @@ class Index extends Base
             $return = json_encode(['success'=>false,'message'=>$result]);
           	return $return;
         }
-        $res = Suser::where(['xuehao'=>$data['xuehao'],'password'=>md5($data['password'])])->find();
+      	$res = Suser::where(['xuehao'=>$data['xuehao'],'password'=>md5($data['password'])])->find();
         if(!$res)
         {
             return json_encode(['success'=>false,'message'=>"账号或密码有误"]);
         }
         $res->token = md5($res->xuehao+$res->xuehao+1);
-        $res->success = true;
-        $redis = new Redis;
-        $redis->set($res->token,1);
+      	$res->success = true;
+      	$redis = new Redis;
+      	$redis->set($res->token,1);
         return $res;
     }
-
-    //首页商家显示
-    public function showlist()
+  
+  	public function showlist()
     {
         $redis = new Redis;
         if($redis->get('showlist') === false)
@@ -50,18 +49,65 @@ class Index extends Base
             return $res;
         }
     }
-    
-    //每个商家的商品信息显示
-    public function showdetail()
+  	public function diancan()
     {
-        $redis = new Redis;
-        $id = Request::get('id');
-        $res = Foodlist::where(['buserId'=>$id,'status'=>1])->select();
+      	$id = Request::get('id');
+      	$res = Foodlist::where(['buserId'=>$id,'status'=>1])->select();
         $res2 = Foodtype::where(['buserId'=>$id,'status'=>1])->select();
-        
-        print_r($res);
-        echo "<br />";
-        print_r($res2);
+      	for($i=0;$i<count($res2);$i++)
+        {
+          $k=0;
+          $res2[$i]->dishs = [];
+          for($j=0;$j<count($res);$j++)
+          {
+            $res[$j]->pic ="https://www.mfmeat.top/userimage/".$res[$j]->image;
+            $res[$j]->id =$res[$j]->Id;
+            $res[$j]->name =$res[$j]->foodname;
+            $res[$j]->price =(int)$res[$j]->price;
+            $res[$j]->sales =0;
+            $res[$j]->count =0;
+          	if($res[$j]->typeId == $res2[$i]->Id)
+            {
+              $res2[$i]->dishs = $res2[$i]->dishs+[$k=>$res[$j]];
+              $k++;
+            }
+          }
+          $res2[$i]->id =  $res2[$i]->Id;
+          $res2[$i]->tag = "a".$res2[$i]->Id;
+          $res2[$i]->name =  $res2[$i]->foodtype;
+        }
+      	return $res2;
     }
-
+  
+    public function savedingdan()
+    {
+      	$dingdanhao = Request::post("dingdanhao");
+      	$foodlist = Request::post("foodlist");
+      	$buserId = Request::post("buserId");
+      	$suserId = Request::post("suserId");
+      	$money = Request::post("money");
+      	$count = Request::post("count");
+      	$food = "";
+      	for($i=0;$i<count($foodlist);$i++)
+        {
+          $food .= $foodlist[$i]["Id"].",";
+        }
+      	$food = substr($food, 0, -1);
+      	$res = Dingdan::create(["dingdanhao"=>$dingdanhao,"buserId"=>$buserId,"suserId"=>$suserId,"food"=>$food,"money"=>$money,"count"=>$count,"status"=>1,"message"=>null]);
+      	if($res)
+        {
+          return json_encode(["code"=>1,"message"=>"成功"]);
+        }
+        else
+        {
+          return json_encode(["code"=>0,"message"=>"不成功"]);
+        }
+    }
+  
+  	public function showdingdan()
+    {
+      $suserId = Request::param('Id');
+      $res = Dingdan::where('suserId',$suserId)->select();
+      return $res;
+    }
 }

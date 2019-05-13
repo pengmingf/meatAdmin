@@ -6,7 +6,7 @@ use app\common\model\Admin;
 
 class Base extends Controller
 {
-    public function _initialize()
+    public function initialize()
     {
         $this->noLogin();
     }
