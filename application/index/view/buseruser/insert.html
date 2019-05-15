@@ -1,0 +1,135 @@
+{extend name="public:base" /}
+{block name="head"}
+{include file="public:head" /}
+<title>新增商家</title>
+{/block}
+{block name="content"}
+<div class="tpl-content-wrapper">
+    <div class="container-fluid am-cf">
+        <div class="row">
+
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">新增商家</div>
+                        <div class="widget-function am-fr">
+                            <a href="javascript:;" class="am-icon-cog"></a>
+                        </div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form class="am-form tpl-form-border-form tpl-form-border-br" id="form">
+                            <div class="am-form-group">
+                                <label for="user-name" class="am-u-sm-3 am-form-label">昵称 <span
+                                        class="tpl-form-line-small-title">nicheng</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" class="tpl-form-input" id="bname" name="bname" placeholder="请输入昵称">
+                                    <small>请填写昵称2-8字。</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="user-name" class="am-u-sm-3 am-form-label">账号 <span
+                                        class="tpl-form-line-small-title">zhanghao</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" class="tpl-form-input" id="username" name="username" placeholder="请输入账号">
+                                    <small>请填写8位数学号。</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="user-name" class="am-u-sm-3 am-form-label">密码 <span
+                                        class="tpl-form-line-small-title">password</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" class="tpl-form-input" id="password" name="password" placeholder="请输入密码">
+                                    <small>请填写6-16位由数字和字母组成的密码。</small>
+                                </div>
+                            </div>
+
+
+
+                            <div class="am-form-group">
+                                <label for="user-name" class="am-u-sm-3 am-form-label">手机号 <span
+                                        class="tpl-form-line-small-title">iphone</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" class="tpl-form-input" id="iphone" name="iphone" placeholder="请输入手机号">
+                                    <small>请填写11位手机号。</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="user-name" class="am-u-sm-3 am-form-label">地址 <span
+                                        class="tpl-form-line-small-title">address</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" class="tpl-form-input" id="message" name="message" placeholder="请输入邮箱">
+                                    <small>请填写正确的邮箱。</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                    <label for="user-name" class="am-u-sm-3 am-form-label">状态 <span
+                                            class="tpl-form-line-small-title">status</span></label>
+                                    <div class="am-u-sm-9">
+                                        <input type="text" class="tpl-form-input" id="status" name="status" placeholder="请输入邮箱">
+                                        <small>请填写正确的邮箱。</small>
+                                    </div>
+                                </div>
+
+                            
+
+                            <div class="am-form-group">
+                                <label for="user-weibo" class="am-u-sm-3 am-form-label">头像 <span
+                                        class="tpl-form-line-small-title">Images</span></label>
+                                <div class="am-u-sm-9">
+                                    <div class="am-form-group am-form-file">
+                                        <input id="image" name="image" type="file" >
+                                        <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                            <i class="am-icon-cloud-upload"></i> 添加头像图片</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                    <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success"
+                                        onclick="insertBuser()">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function insertBuser() 
+    {
+        var form =  document.getElementById("form");
+        var formData = new FormData(form);
+        var files = $('#image').prop('files');
+        formData.append('file',files[0]);
+        $.ajax({
+            url     :   "{:url('buseruser/insertBuser')}",
+            type    :   "post",
+            // enctype :   'multipart/form-data',
+            // data    :   {'name':name,'xuehao':xuehao,'password':password,'shenfen':shenfen,'iphone':iphone,'email':email,'image':image},
+            data    :   formData,
+            cache   :   false,
+            contentType: false,    
+            processData: false, 
+            dataType:   "json",
+            success :   function(data){
+                if(data.code === 1)
+                {
+                    alert(data.message);
+                    window.location.href="{:url('buseruser/buserlist')}";
+                }else{
+                    alert(data.message);
+                }
+            }
+            
+        });
+    }
+</script>
+{/block}

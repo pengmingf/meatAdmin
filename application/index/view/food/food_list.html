@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 {block name="head"}
 {include file="public:head" /}
-<title>用户列表</title>
+<title>商品列表</title>
 {/block}
 {block name="content"}
 <div class="tpl-content-wrapper">
@@ -10,7 +10,7 @@
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
-                        <div class="widget-title  am-cf">文章列表</div>
+                        <div class="widget-title  am-cf">商品列表</div>
 
 
                     </div>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                             <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                <input type="text" name="message" id="message" placeholder="请输入昵称/学号/手机号进行搜索" class="am-form-field ">
+                                <input type="text" name="message" id="message" placeholder="请输入菜名/价格" class="am-form-field ">
                                 <span class="am-input-group-btn">
                                     <button
                                         class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search"
@@ -57,7 +57,7 @@
                                 //         }
                                 //     }
                                 // });
-                                window.location.href = "{:url('student/select')}?message="+message;
+                                window.location.href = "{:url('select')}?message="+message;
                             }
                         </script>
 
@@ -65,14 +65,13 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                                 <thead>
                                     <tr>
-                                        <th>头像</th>
-                                        <th>昵称</th>
-                                        <th>学号</th>
-                                        <th>身份</th>
-                                        <th>手机号</th>
-                                        <th>邮箱</th>
+                                        <th>菜品图片</th>
+                                        <th>菜名</th>
+                                        <th>价格</th>
+                                        <th>菜类</th>
+                                        <th>商家</th>
                                         <th>状态</th>
-                                        <th>注册时间</th>
+                                        <th>创建时间</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -81,11 +80,10 @@
                                             <td>
                                                 <img src="/userimage/{$vo.image}" class="tpl-table-line-img" alt="">
                                             </td>
-                                            <td class="am-text-middle">{$vo.name}</td>
-                                            <td class="am-text-middle">{$vo.xuehao}</td>
-                                            <td class="am-text-middle">{$vo.shenfen}</td>
-                                            <td class="am-text-middle">{$vo.iphone}</td>
-                                            <td class="am-text-middle">{$vo.email}</td>
+                                            <td class="am-text-middle">{$vo.foodname}</td>
+                                            <td class="am-text-middle">{$vo.price}</td>
+                                            <td class="am-text-middle">{$vo.typeId}</td>
+                                            <td class="am-text-middle">{$vo.buserId}</td>
                                             <td class="am-text-middle">{$vo.status}</td>
                                             <td class="am-text-middle">{$vo.create_time}</td>
                                             <td class="am-text-middle">
@@ -138,7 +136,7 @@
                             }
                         </script>
                         
-                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -1%;height:80%;background-color:#4B5357;" id="my-popup">
+                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -8%;height:70%;background-color:#4B5357;" id="my-popup">
                             <div class="am-popup-hd" style="background-color:#4B5357;">
                               <h4 class="am-popup-title" style="color:white;">修改用户</h4>
                               <span data-am-modal-close

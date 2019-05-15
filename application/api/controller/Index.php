@@ -10,6 +10,7 @@ use think\cache\driver\Redis;
 use app\common\model\Foodlist;
 use app\common\model\Foodtype;
 use app\common\model\Dingdan;
+use app\common\model\SuserLog;
 
 class Index extends Controller
 {
@@ -29,11 +30,20 @@ class Index extends Controller
         {
             return json_encode(['success'=>false,'message'=>"账号或密码有误"]);
         }
-        $res->token = md5($res->xuehao+$res->xuehao+1);
-      	$res->success = true;
-      	$redis = new Redis;
-      	$redis->set($res->token,1);
-        return $res;
+        else
+        {
+          //写入登录日志
+          $ip = request()->ip();
+          $suserLog = new SuserLog;
+          $suserLog->save(['suser_id'=>$result['Id'],'username'=>$result['name'],'ip'=>$ip,'method'=>"登录"]);
+          //生成token，并将其写入缓存中
+          $res->token = md5($res->xuehao+$res->xuehao+1);
+      	  $res->success = true;
+          $redis = new Redis;
+      	  $redis->set($res->token,1);
+          return $res;
+        }
+        
     }
   
   	public function showlist()
@@ -110,4 +120,22 @@ class Index extends Controller
       $res = Dingdan::where('suserId',$suserId)->select();
       return $res;
     }
+
+
+    // //获取ip地址
+    // function getIp()
+    // {
+    //     //最后一次代理的ip
+    //     if ($_SERVER['REMOTE_ADDR']) {
+    //         $cip = $_SERVER['REMOTE_ADDR'];
+    //     } elseif (getenv("REMOTE_ADDR")) {
+    //         $cip = getenv("REMOTE_ADDR");
+    //     } elseif (getenv("HTTP_CLIENT_IP")) {
+    //         $cip = getenv("HTTP_CLIENT_IP");
+    //     } else {
+    //         $cip = "unknown";
+    //     }
+    //     return $cip;
+    // }
+    //request()->ip();TP自带的获取ip地址
 }

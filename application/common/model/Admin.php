@@ -14,9 +14,4 @@ class Admin extends Model
   {
     return md5($value);
   }
-  public function getStatusAttr($value)
-  {
-    $status = ['1' => '正常', '0' => '禁用'];
-    return $status[$value];
-  }
 }

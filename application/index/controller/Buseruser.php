@@ -8,13 +8,12 @@ use think\File;
 
 class Buseruser extends Base
 {
-    public function studentList()
+    public function BuserList()
     {
-        //丢人啊兄嘚，这种代码都写的出来
-        // $data = Suser::where('Id',1)->find();
-        // $this->assign('update',$data);
-        $result = Suser::where('status',"neq",2)->select();
+        $result = Buser::where('status',"neq",2)->paginate(5);
+        $page = $result->render();
         $this->assign('data',$result);
+        $this->assign('page',$page);
         return $this->fetch();
     }
 
@@ -23,17 +22,17 @@ class Buseruser extends Base
         return $this->fetch();
     }
 
-    public function insertStudent()
+    public function insertBuser()
     {
         if(Request::isAjax())
         {
             $data = Request::post();
-            $rule = ['name|昵称' => 'require|length:2,14',
-                    'xuehao|学号'=>'require|length:8|integer',
+            $rule = ['bname|昵称' => 'require|length:2,14',
+                    'username|学号'=>'require|length:8|integer',
                     'password|密码'=>'require|length:6,16|alphaDash',
-                    'shenfen|身份'=>'require',
+                    'status|身份'=>'require',
                     'iphone|手机号'=>'require|mobile',
-                    'email|邮箱'=>'require|email'];
+                    'message|邮箱'=>'require'];
             $res = $this->validate($data,$rule);
             if($res !== true)
             {
@@ -41,9 +40,9 @@ class Buseruser extends Base
             }
             else
             {
-                    $suser = new Suser;
-                    $res1 = Suser::where('xuehao', $data['xuehao'])->find();
-                    $res2 = Suser::where('iphone', $data['iphone'])->find();
+                    $buser = new Buser;
+                    $res1 = Buser::where('username', $data['username'])->find();
+                    $res2 = Buser::where('iphone', $data['iphone'])->find();
                     if($res1)
                     {
                         return ['code'=>0,'message'=>'学号已存在,添加失败'];
@@ -56,17 +55,17 @@ class Buseruser extends Base
                     {
                         //目前使用的缩略过得图,这种处理方式是否得当?
                         $image = \think\Image::open(request()->file('image'));
-                        $path ="./userimage/suolue/"."$data[xuehao]".".png";
-                        $image->thumb(50, 50)->save($path);
-                        $savepath = "suolue/"."$data[xuehao]".".png";
+                        $path ="./userimage/buser/"."$data[username]".".png";
+                        $image->thumb(75, 75)->save($path);
+                        $savepath = "buser/"."$data[username]".".png";
                         //直接使用上传图片，不能裁剪大小  不适合头像
                         /*
                         $file =request()->file('image');
                         $info = $file->move('/userimage');
                         */
-                        $result = $suser->save(['name'=>$data['name'],'image'=>$savepath,'xuehao'=>$data['xuehao'],
-                                    'password'=>$data['password'],'shenfen'=>$data['shenfen'],'iphone'=>$data['iphone'],
-                                    'email'=>$data['email']]);
+                        $result = $buser->save(['bname'=>$data['bname'],'image'=>$savepath,'username'=>$data['username'],
+                                    'password'=>$data['password'],'status'=>$data['status'],'iphone'=>$data['iphone'],
+                                    'message'=>$data['message']]);
                         if($result==true)
                         {
                             return ['code'=>1,'message'=>'添加成功'];
@@ -83,22 +82,22 @@ class Buseruser extends Base
     public function update()
     {
         $id = Request::post('Id');
-        $data = Suser::where('Id',$id)->find();
+        $data = Buser::where('Id',$id)->find();
         $this->assign('update',$data);
         return $data;
     }
 
-    public function updateStudent()
+    public function updateBuser()
     {
         if(Request::isAjax())
         {
             $data = Request::post();
-            $rule = ['name|昵称' => 'require|length:2,14',
-                    'xuehao|学号'=>'require|length:8|integer',
+            $rule = ['bname|昵称' => 'require|length:2,14',
+                    'username|学号'=>'require|length:8|integer',
                     'password|密码'=>'require|alphaDash',
-                    'shenfen|身份'=>'require',
+                    'status|身份'=>'require',
                     'iphone|手机号'=>'require|mobile',
-                    'email|邮箱'=>'require|email'];
+                    'message|邮箱'=>'require'];
             $res = $this->validate($data,$rule);
             if($res !== true)
             {
@@ -106,8 +105,8 @@ class Buseruser extends Base
             }
             else
             {
-                    $suser = new Suser;
-                    $res1 = Suser::where('xuehao', $data['xuehao'])->find();
+                    $buser = new Buser;
+                    $res1 = Buser::where('username', $data['username'])->find();
                     if(!$res1)
                     {
                         return ['code'=>0,'message'=>'学号不存在,修改失败'];
@@ -117,9 +116,9 @@ class Buseruser extends Base
                         if($data['picture'] != 'null'){
                             //目前使用的缩略过得图,这种处理方式是否得当?
                             $image = \think\Image::open(request()->file('image'));
-                            $path ="./userimage/suolue/"."$data[xuehao]".".png";
+                            $path ="./userimage/buser/"."$data[username]".".png";
                             $image->thumb(50, 50)->save($path);
-                            $savepath = "suolue/"."$data[xuehao]".".png";
+                            $savepath = "buser/"."$data[username]".".png";
                             //直接使用上传图片，不能裁剪大小  不适合头像
                             /*
                             $file =request()->file('image');
@@ -131,15 +130,15 @@ class Buseruser extends Base
                         //没有修改过密码的话（设置了修改器的  所以必须加判断）
                         if($data['password']== $res1->password)
                         {
-                            $result = $suser->save(['name'=>$data['name'],'image'=>$savepath,'xuehao'=>$data['xuehao'],
-                                    'shenfen'=>$data['shenfen'],'iphone'=>$data['iphone'],
-                                    'email'=>$data['email']],['xuehao'=>$data['xuehao']]);
+                            $result = $buser->save(['bname'=>$data['bname'],'image'=>$savepath,'username'=>$data['username'],
+                                    'status'=>$data['status'],'iphone'=>$data['iphone'],
+                                    'message'=>$data['message']],['username'=>$data['username']]);
                         }
                         //修改了密码的话
                         else{
-                            $result = $suser->save(['name'=>$data['name'],'image'=>$savepath,'xuehao'=>$data['xuehao'],
-                                    'password'=>$data['password'],'shenfen'=>$data['shenfen'],'iphone'=>$data['iphone'],
-                                    'email'=>$data['email']],['xuehao'=>$data['xuehao']]);
+                            $result = $buser->save(['bname'=>$data['bname'],'image'=>$savepath,'username'=>$data['username'],
+                                    'password'=>$data['password'],'status'=>$data['status'],'iphone'=>$data['iphone'],
+                                    'message'=>$data['message']],['username'=>$data['username']]);
                         }
                         if($result==true)
                         {
@@ -159,8 +158,8 @@ class Buseruser extends Base
         if(Request::isAjax())
         {
             $Id = Request::post('Id');
-            $suer = new Suser;
-            $res = $suer->save(['status'=>2],['Id'=>$Id]);
+            $buser = new Buser;
+            $res = $buser->save(['status'=>2],['Id'=>$Id]);
             if($res)
             {
                 return ['code'=>1,'message'=>'删除成功'];

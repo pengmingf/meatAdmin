@@ -4,7 +4,7 @@ namespace app\index\controller;
 use app\common\controller\Base;
 use think\facade\Request;
 use app\common\model\Suser;
-use think\File;
+use app\common\model\SuserLog;
 
 class Student extends Base
 {
@@ -13,8 +13,10 @@ class Student extends Base
         //丢人啊兄嘚，这种代码都写的出来
         // $data = Suser::where('Id',1)->find();
         // $this->assign('update',$data);
-        $result = Suser::where('status',"neq",2)->select();
+        $result = Suser::where('status',"neq",2)->paginate(5);
+        $page = $result->render();
         $this->assign('data',$result);
+        $this->assign('page',$page);
         return $this->fetch();
     }
 
@@ -172,5 +174,26 @@ class Student extends Base
         }else{
             exit('非法请求！');
         }
+    }
+
+
+    public function select()
+    {
+        $message = Request::param('message');
+        $suser = new Suser;
+        $res = $suser->where("name|iphone|xuehao","like","%$message%")->where("status","neq",2)->paginate(5);
+        $page = $res->render();
+        $this->assign('data',$res);
+        $this->assign('page',$page);
+        return $this->fetch('student/student_list');
+    }
+
+    public function studentlog()
+    {
+        $data = SuserLog::paginate(2);
+        $page = $data->render();
+        $this->assign('data',$data);
+        $this->assign('page',$page);
+        return $this->fetch();
     }
 }

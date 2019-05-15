@@ -95,21 +95,15 @@
                             function update(id)
                             {
                                 $.ajax({
-                                    url     :   "{:url('Student/update')}",
+                                    url     :   "{:url('adminuser/update')}",
                                     type    :   "post",
                                     data    :   {'Id':id},
                                     dataType:   "json",
                                     success :   function(data){
                                         $('#name').val(data.name);
-                                        $('#xuehao').val(data.xuehao);
+                                        $('#xuehao').val(data.username);
                                         $('#password').val(data.password);
-                                        if(data.shenfen == '教师')
-                                        {
-                                            $("input[name='shenfen']").val([2]);
-                                        }else{
-                                            $("input[name='shenfen']").val([1]);
-                                        }
-                                        
+                                        $('#shenfen').val(data.status);
                                         $('#iphone').val(data.iphone);
                                         $('#email').val(data.email);
                                     }
@@ -117,7 +111,7 @@
                             }
                         </script>
                         
-                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -8%;height:70%;background-color:#4B5357;" id="my-popup">
+                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -1%;height:80%;background-color:#4B5357;" id="my-popup">
                             <div class="am-popup-hd" style="background-color:#4B5357;">
                               <h4 class="am-popup-title" style="color:white;">修改用户</h4>
                               <span data-am-modal-close
@@ -135,10 +129,10 @@
                                                 </div>
                     
                                                 <div class="am-form-group">
-                                                    <label for="user-name" class="am-u-sm-3 am-form-label">学号 <span
-                                                            class="tpl-form-line-small-title">xuehao</span></label>
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">账号 <span
+                                                            class="tpl-form-line-small-title">zhanghao</span></label>
                                                     <div class="am-u-sm-9">
-                                                        <input type="text" class="tpl-form-input" id="xuehao" style="color:gray;" name="xuehao" readonly="readonly" placeholder="请输入学号">
+                                                        <input type="text" class="tpl-form-input" id="xuehao" style="color:gray;" name="xuehao" readonly="readonly" placeholder="请输入账号">
                                                         <small>请填写8位数学号。</small>
                                                     </div>
                                                 </div>
@@ -153,13 +147,11 @@
                                                 </div>
                     
                                                 <div class="am-form-group">
-                                                    <label for="user-name" class="am-u-sm-3 am-form-label">身份 <span
+                                                        <label for="user-name" class="am-u-sm-3 am-form-label">身份 <span
                                                             class="tpl-form-line-small-title">shenfen</span></label>
                                                     <div class="am-u-sm-9">
-                                                        <input type="radio" class="tpl-form-input" value=1 name="shenfen"
-                                                            id="shenfen">学生
-                                                        <input type="radio" class="tpl-form-input" value=2 name="shenfen"
-                                                            id="shenfen">教师
+                                                        <input type="text" class="tpl-form-input" id="shenfen" style="color:gray;" name="shenfen" placeholder="请输入身份">
+                                                        <small>请填写1位数学号。</small>
                                                     </div>
                                                 </div>
                     
@@ -198,7 +190,7 @@
                                                 <div class="am-form-group">
                                                     <div class="am-u-sm-9 am-u-sm-push-3">
                                                         <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success"
-                                                            onclick="updateStudent()">提交</button>
+                                                            onclick="updateAdmin()">提交</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -206,7 +198,7 @@
                                     </div>
                           </div>
                           <script>
-                              function updateStudent()
+                              function updateAdmin()
                               {
                                 var form =  document.getElementById("form");
                                 var formData = new FormData(form);
@@ -219,7 +211,7 @@
                                     formData.append('file',files[0]);
                                 }
                                   $.ajax({
-                                      url       :   "{:url('Student/updateStudent')}",
+                                      url       :   "{:url('adminuser/updateadmin')}",
                                       type      :   "post",
                                       data      :   formData,
                                       dataType  :   "json",
@@ -229,7 +221,7 @@
                                       success   :   function(data){
                                         if (data.code === 1) {
                                             alert(data.message);
-                                            window.location.href = "{:url('student/studentList')}";
+                                            window.location.href = "{:url('adminuser/admin')}";
                                         } else {
                                             alert(data.message);
                                         }
@@ -242,20 +234,11 @@
                         
                         
                         <!-- 页码 -->
-                          <div class="am-u-lg-12 am-cf">
-
-                            <div class="am-fr">
-                                <ul class="am-pagination tpl-pagination">
-                                    <li class="am-disabled"><a href="#">«</a></li>
-                                    <li class="am-active"><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#">»</a></li>
-                                </ul>
+                        <div class="am-u-lg-12 am-cf">
+                                <div class="am-fr">
+                                    {$page|raw}
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -265,7 +248,7 @@
 <script>
     function insert()
     {
-        window.location.href = "{:url('student/insert')}";
+        window.location.href = "{:url('adminuser/insert')}";
     }
 </script>
 
@@ -276,7 +259,7 @@
             if(res)
             {
                 $.ajax({
-                    url     :   "{:url('Student/delete')}",
+                    url     :   "{:url('adminuser/delete')}",
                     type    :   "post",
                     data    :   {"Id":id},
                     dataType:   "json",
@@ -284,7 +267,7 @@
                         if(data.code == 1)
                         {
                             alert(data.message);
-                            window.location.href = "{:url('Student/studentList')}";
+                            window.location.href = "{:url('adminuser/admin')}";
                         }
                         else
                         {
