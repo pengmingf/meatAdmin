@@ -1,4 +1,4 @@
-<?php /*a:7:{s:78:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/student/student_list.html";i:1555584428;s:69:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/base.html";i:1554692824;s:69:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/head.html";i:1555388196;s:68:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/top.html";i:1555476474;s:70:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/style.html";i:1554691860;s:68:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/nav.html";i:1555377996;s:69:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/foot.html";i:1554739024;}*/ ?>
+<?php /*a:7:{s:78:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/student/student_list.html";i:1557892036;s:69:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/base.html";i:1557797260;s:69:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/head.html";i:1557889080;s:68:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/top.html";i:1557797260;s:70:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/style.html";i:1557797260;s:68:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/nav.html";i:1557890448;s:69:"/www/wwwroot/mfmeat/meatAdmin/application/index/view/public/foot.html";i:1557797260;}*/ ?>
 
 <!DOCTYPE html>
 <head>
@@ -19,6 +19,19 @@
     <link rel="stylesheet" href="/static/assets/css/amazeui.min.css"/>
     <script src="/static/assets/js/app.js"></script>
 
+    <style>
+
+        /*分页*/
+        
+        .pagination {margin: 0 auto;}
+        
+        .pagination li {display: inline-block;margin-right: -1px;padding: 8px;border: 1px solid #e2e2e2;min-width: 20px;text-align: center;}
+        
+        .pagination li.active {background: #009688;color: #fff;border: 1px solid #009688;}
+        
+        .pagination li a {display: block;text-align: center;}
+            
+    </style>
 </head>
 <title>用户列表</title>
 
@@ -195,11 +208,11 @@
     <div class="tpl-sidebar-user-panel">
         <div class="tpl-user-panel-slide-toggleable">
             <div class="tpl-user-panel-profile-picture">
-                <img src="/static/assets/img/user04.png" alt="">
+                <img src="/userimage/<?php echo htmlentities(app('session')->get('admin_id')->image); ?>" alt="">
             </div>
             <span class="user-panel-logged-in-text">
       <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
-      禁言小张
+      <?php echo htmlentities(app('session')->get('admin_id')->name); ?>
   </span>
             <a href="javascript:;" class="tpl-user-panel-action-link"> <span class="am-icon-pencil"></span> 账号设置</a>
         </div>
@@ -262,7 +275,7 @@
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
                 <li class="sidebar-nav-link">
-                    <a href="table-list.html">
+                    <a href="<?php echo url('buseruser/buserlist'); ?>">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 商家列表
                     </a>
                 </li>
@@ -289,7 +302,7 @@
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
                 <li class="sidebar-nav-link">
-                    <a href="table-list.html">
+                    <a href="<?php echo url('dingdan/dingdanList'); ?>">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 订单列表
                     </a>
                 </li>
@@ -304,7 +317,7 @@
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
                 <li class="sidebar-nav-link">
-                    <a href="table-list.html">
+                    <a href="<?php echo url('adminuser/admin'); ?>">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 管理员列表
                     </a>
                 </li>
@@ -337,7 +350,7 @@
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
                 <li class="sidebar-nav-link">
-                    <a href="table-list.html">
+                    <a href="<?php echo url('food/foodlist'); ?>">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 菜品列表
                     </a>
                 </li>
@@ -504,14 +517,33 @@
                         </div>
                         <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                             <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                <input type="text" class="am-form-field ">
+                                <input type="text" name="message" id="message" placeholder="请输入昵称/学号/手机号进行搜索" class="am-form-field ">
                                 <span class="am-input-group-btn">
                                     <button
                                         class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search"
-                                        type="button"></button>
+                                        type="button" onclick="select()"></button>
                                 </span>
                             </div>
                         </div>
+                        <script>
+                            function select()
+                            {
+                                var message = $("#message").val();
+                                // $.ajax({
+                                //     url     :   "<?php echo url('student/select'); ?>",
+                                //     data    :   {"message":message},
+                                //     type    :   "post",
+                                //     dataType:   "json",
+                                //     success :   function(data){
+                                //         if(data.code != 1)
+                                //         {
+                                //             alert(data.message);
+                                //         }
+                                //     }
+                                // });
+                                window.location.href = "<?php echo url('student/select'); ?>?message="+message;
+                            }
+                        </script>
 
                         <div class="am-u-sm-12">
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
@@ -590,7 +622,7 @@
                             }
                         </script>
                         
-                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -8%;height:70%;background-color:#4B5357;" id="my-popup">
+                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -1%;height:80%;background-color:#4B5357;" id="my-popup">
                             <div class="am-popup-hd" style="background-color:#4B5357;">
                               <h4 class="am-popup-title" style="color:white;">修改用户</h4>
                               <span data-am-modal-close
@@ -716,19 +748,14 @@
                         
                         <!-- 页码 -->
                           <div class="am-u-lg-12 am-cf">
-
                             <div class="am-fr">
-                                <ul class="am-pagination tpl-pagination">
-                                    <li class="am-disabled"><a href="#">«</a></li>
-                                    <li class="am-active"><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#">»</a></li>
-                                </ul>
+                                <?php echo $page; ?>
                             </div>
                         </div>
+
+                        
+                            
+
                     </div>
                 </div>
             </div>

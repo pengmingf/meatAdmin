@@ -1,0 +1,77 @@
+{extend name="public:base" /}
+{block name="head"}
+{include file="public:head" /}
+<title>用户列表</title>
+{/block}
+{block name="content"}
+<div class="tpl-content-wrapper">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">文章列表</div>
+
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-3" >
+                            <div class="am-form-group tpl-table-list-select" >
+                                
+                            </div>
+                        </div>
+
+
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                                <thead>
+                                    <tr>
+                                        <th>序号</th>
+                                        <th>姓名</th>
+                                        <th>ip地址</th>
+                                        <th>事件</th>
+                                        <th>时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {volist name="data" id="vo"}
+                                        <tr class="gradeX">
+                                            <td class="am-text-middle">{$i}</td>
+                                            <td class="am-text-middle">{$vo.username}</td>
+                                            <td class="am-text-middle">{$vo.ip}</td>
+                                            <td class="am-text-middle">{$vo.method}</td>
+                                            <td class="am-text-middle">{$vo.create_time}</td>
+
+                                        </tr>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        
+
+
+                        
+                        
+                        <!-- 页码 -->
+                          <div class="am-u-lg-12 am-cf">
+                            <div class="am-fr">
+                                {$page|raw}
+                            </div>
+                        </div>
+
+                        
+                            
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+

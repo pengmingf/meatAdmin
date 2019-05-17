@@ -25,6 +25,8 @@ class Login extends Controller
     
     public function checkLogin()
     {
+        // $ip = $_SERVER['REMOTE_ADDR'];这个只能获取到最后一次代理的ip地址
+        $ip = $this->getIp();
         if(Request::isAjax())
         {
             $data = Request::post();
@@ -38,8 +40,8 @@ class Login extends Controller
                 {
                     session('admin_id',$result);
                     //保存到日志表
-                    // $adminLog = new AdminLog;
-                    // $adminLog->save(['']);
+                    $adminLog = new AdminLog;
+                    $adminLog->save(['admin_id'=>$result['Id'],'username'=>$result['name'],'ip'=>$ip,'method'=>"登录系统"]);
                     return ['code'=>1,'message'=>'登陆成功!'];
                 }else{
                     return ['code'=>0,'message'=>'用户名或密码错误！'];
@@ -50,5 +52,21 @@ class Login extends Controller
         }else{
             exit('非法请求');
         }
+    }
+
+    //获取ip地址
+    function getIp()
+    {
+        //最后一次代理的ip
+        if ($_SERVER['REMOTE_ADDR']) {
+            $cip = $_SERVER['REMOTE_ADDR'];
+        } elseif (getenv("REMOTE_ADDR")) {
+            $cip = getenv("REMOTE_ADDR");
+        } elseif (getenv("HTTP_CLIENT_IP")) {
+            $cip = getenv("HTTP_CLIENT_IP");
+        } else {
+            $cip = "unknown";
+        }
+        return $cip;
     }
 }

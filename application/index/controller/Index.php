@@ -11,21 +11,6 @@ class Index extends Base
         return $this->fetch();
     }
     
-    //设置昵称
-    // public function setName()
-    // {
-    //     $session_id = session('admin_id');
-    //     $admin = new Admin;
-    //     $res = $admin->where('id',$session_id)->find();
-    //     if($res !== null)
-    //     {
-    //         $this->assign('name',$res->name);
-    //         return $this->fetch('public/top');
-    //     }else{
-    //         exit('异常登陆');
-    //     }
-    // }
-    
     public function loginOut()
     {
         Session::clear();

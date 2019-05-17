@@ -1,0 +1,313 @@
+{extend name="public:base" /}
+{block name="head"}
+{include file="public:head" /}
+<title>商品列表</title>
+{/block}
+{block name="content"}
+<div class="tpl-content-wrapper">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">商品列表</div>
+
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <button type="button" onclick="insert()" class="am-btn am-btn-default am-btn-success"><span
+                                                class="am-icon-plus"></span> 新增</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-3" >
+                            <div class="am-form-group tpl-table-list-select" >
+                                
+                            </div>
+                        </div>
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                <input type="text" name="message" id="message" placeholder="请输入菜名/价格" class="am-form-field ">
+                                <span class="am-input-group-btn">
+                                    <button
+                                        class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search"
+                                        type="button" onclick="select()"></button>
+                                </span>
+                            </div>
+                        </div>
+                        <script>
+                            function select()
+                            {
+                                var message = $("#message").val();
+                                // $.ajax({
+                                //     url     :   "{:url('student/select')}",
+                                //     data    :   {"message":message},
+                                //     type    :   "post",
+                                //     dataType:   "json",
+                                //     success :   function(data){
+                                //         if(data.code != 1)
+                                //         {
+                                //             alert(data.message);
+                                //         }
+                                //     }
+                                // });
+                                window.location.href = "{:url('select')}?message="+message;
+                            }
+                        </script>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                                <thead>
+                                    <tr>
+                                        <th>菜品图片</th>
+                                        <th>菜名</th>
+                                        <th>价格</th>
+                                        <th>菜类</th>
+                                        <th>商家</th>
+                                        <th>状态</th>
+                                        <th>创建时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {volist name="data" id="vo"}
+                                        <tr class="gradeX">
+                                            <td>
+                                                <img src="/userimage/{$vo.image}" class="tpl-table-line-img" alt="">
+                                            </td>
+                                            <td class="am-text-middle">{$vo.foodname}</td>
+                                            <td class="am-text-middle">{$vo.price}</td>
+                                            <td class="am-text-middle">{$vo.typeId}</td>
+                                            <td class="am-text-middle">{$vo.buserId}</td>
+                                            <td class="am-text-middle">{$vo.status}</td>
+                                            <td class="am-text-middle">{$vo.create_time}</td>
+                                            <td class="am-text-middle">
+                                                <div class="tpl-table-black-operation">
+                                                        <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus" data-am-modal="{target: '#my-popup'}" onclick="update({$vo.Id})";>编辑</button></i> 
+                                                    
+                                                        <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus" onclick="delet({$vo.Id})";>删除</button>
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                        </div>
+                        <script type="text/javascript">
+                            jQuery(".am-popup am-popup-inner").slide({
+                                titCell:"h3", //鼠标触发对象
+                                targetCell:"ul", //与titCell一一对应，第n个titCell控制第n个targetCell的显示隐藏
+                                effect:"slideDown", //targetCell下拉效果
+                                delayTime:300 , //效果时间
+                                triggerTime:150, //鼠标延迟触发时间（默认150）
+                                defaultPlay:true,//默认是否执行效果（默认true）
+                                returnDefault:true //鼠标从.sideMen移走后返回默认状态（默认false）
+                                });
+                        </script> 
+                        <script type="text/javascript">
+                            function update(id)
+                            {
+                                $.ajax({
+                                    url     :   "{:url('Student/update')}",
+                                    type    :   "post",
+                                    data    :   {'Id':id},
+                                    dataType:   "json",
+                                    success :   function(data){
+                                        $('#name').val(data.name);
+                                        $('#xuehao').val(data.xuehao);
+                                        $('#password').val(data.password);
+                                        if(data.shenfen == '教师')
+                                        {
+                                            $("input[name='shenfen']").val([2]);
+                                        }else{
+                                            $("input[name='shenfen']").val([1]);
+                                        }
+                                        
+                                        $('#iphone').val(data.iphone);
+                                        $('#email').val(data.email);
+                                    }
+                                });
+                            }
+                        </script>
+                        
+                        <div class="am-popup am-popup-inner" style="position: absolute;top: 50%;left: 50%;width:60%;transform: translate(-50%, -50%);margin-left: -6%;margin-top: -8%;height:70%;background-color:#4B5357;" id="my-popup">
+                            <div class="am-popup-hd" style="background-color:#4B5357;">
+                              <h4 class="am-popup-title" style="color:white;">修改用户</h4>
+                              <span data-am-modal-close
+                                  class="am-close" style="background-color:white;">&times;</span> </div>
+                                  <div class="widget am-cf">
+                                        <div class="widget-body am-fr">
+                                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="form">
+                                                <div class="am-form-group">
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">昵称 <span
+                                                            class="tpl-form-line-small-title">nicheng</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <input type="text" class="tpl-form-input" style="color:gray;" id="name" name="name" placeholder="请输入昵称">
+                                                        <small>请填写昵称2-8字。</small>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="am-form-group">
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">学号 <span
+                                                            class="tpl-form-line-small-title">xuehao</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <input type="text" class="tpl-form-input" id="xuehao" style="color:gray;" name="xuehao" readonly="readonly" placeholder="请输入学号">
+                                                        <small>请填写8位数学号。</small>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="am-form-group">
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">密码 <span
+                                                            class="tpl-form-line-small-title">password</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <input type="text" class="tpl-form-input" id="password" style="color:gray;" name="password" placeholder="请输入密码">
+                                                        <small>请填写6-16位由数字和字母组成的密码。</small>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="am-form-group">
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">身份 <span
+                                                            class="tpl-form-line-small-title">shenfen</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <input type="radio" class="tpl-form-input" value=1 name="shenfen"
+                                                            id="shenfen">学生
+                                                        <input type="radio" class="tpl-form-input" value=2 name="shenfen"
+                                                            id="shenfen">教师
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="am-form-group">
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">手机号 <span
+                                                            class="tpl-form-line-small-title">iphone</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <input type="text" class="tpl-form-input" style="color:gray;" id="iphone" name="iphone" placeholder="请输入手机号">
+                                                        <small>请填写11位手机号。</small>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="am-form-group">
+                                                    <label for="user-name" class="am-u-sm-3 am-form-label">邮箱 <span
+                                                            class="tpl-form-line-small-title">email</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <input type="text" class="tpl-form-input" style="color:gray;" id="email" name="email" placeholder="请输入邮箱">
+                                                        <small>请填写正确的邮箱。</small>   
+                                                    </div>
+                                                </div>
+                    
+                    
+                    
+                                                <div class="am-form-group">
+                                                    <label for="user-weibo" class="am-u-sm-3 am-form-label">头像 <span
+                                                            class="tpl-form-line-small-title">Images</span></label>
+                                                    <div class="am-u-sm-9">
+                                                        <div class="am-form-group am-form-file">
+                                                            <input id="image" name="image" type="file" >
+                                                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                                                <i class="am-icon-cloud-upload"></i> 添加头像图片</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                                        <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success"
+                                                            onclick="updateStudent()">提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                          </div>
+                          <script>
+                              function updateStudent()
+                              {
+                                var form =  document.getElementById("form");
+                                var formData = new FormData(form);
+                                var files = $('#image').prop('files');
+                                if(!files[0])
+                                {
+                                    formData.append('picture','null');
+                                }else{
+                                    formData.append('picture','true');
+                                    formData.append('file',files[0]);
+                                }
+                                  $.ajax({
+                                      url       :   "{:url('Student/updateStudent')}",
+                                      type      :   "post",
+                                      data      :   formData,
+                                      dataType  :   "json",
+                                      cache     :   false,
+                                      contentType:  false,
+                                      processData:  false,
+                                      success   :   function(data){
+                                        if (data.code === 1) {
+                                            alert(data.message);
+                                            window.location.href = "{:url('student/studentList')}";
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                      }
+
+
+                                  });
+                              }
+                          </script>
+                        
+                        
+                        <!-- 页码 -->
+                          <div class="am-u-lg-12 am-cf">
+                            <div class="am-fr">
+                                {$page|raw}
+                            </div>
+                        </div>
+
+                        
+                            
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function insert()
+    {
+        window.location.href = "{:url('student/insert')}";
+    }
+</script>
+
+<script>
+        function delet(id)
+        {
+            var res = confirm('你确定要删除吗?');
+            if(res)
+            {
+                $.ajax({
+                    url     :   "{:url('Student/delete')}",
+                    type    :   "post",
+                    data    :   {"Id":id},
+                    dataType:   "json",
+                    success :   function(data){
+                        if(data.code == 1)
+                        {
+                            alert(data.message);
+                            window.location.href = "{:url('Student/studentList')}";
+                        }
+                        else
+                        {
+                            alert(data.message);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+{/block}
+
